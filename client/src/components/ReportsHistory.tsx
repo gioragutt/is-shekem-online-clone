@@ -40,6 +40,13 @@ const data: ReportItemData[] = [
     upvotes: 1,
     timestamp: new Date(Date.now() - 1_000_000),
   },
+  {
+    reporter: 'מאוד',
+    open: true,
+    downvotes: 3,
+    upvotes: 10,
+    timestamp: new Date(Date.now() - 10_000_000_000),
+  },
 ];
 
 const useReportItemStyles = makeStyles({
