@@ -1,7 +1,9 @@
-import { Card, IconButton, makeStyles, TextField } from '@material-ui/core';
+import { IconButton, makeStyles, TextField, Paper, Box } from '@material-ui/core';
 import React from 'react';
 import { ClosedIcon, OpenIcon } from './StatusIcon';
 import { Tooltip } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
+import { SectionTitle } from './SectionTitle';
 
 const useStyles = makeStyles({
   form: {
@@ -18,25 +20,29 @@ const useStyles = makeStyles({
 
 export function ReportForm() {
   const classes = useStyles();
+
   return (
-    <Card>
-      <form className={classes.form} autoComplete="off">
-        <Tooltip title="דווח סגור" placement="top">
-          <IconButton type="submit">
-            <ClosedIcon fontSize="large" />
-          </IconButton>
-        </Tooltip>
+    <Box>
+      <SectionTitle title="דיווח חדש" icon={<AddIcon />} />
+      <Paper variant="outlined">
+        <form className={classes.form} autoComplete="off">
+          <Tooltip title="דווח סגור" placement="top">
+            <IconButton type="submit">
+              <ClosedIcon fontSize="large" />
+            </IconButton>
+          </Tooltip>
 
-        <div className={classes.nameInput}>
-          <TextField label="שם מדווח" />
-        </div>
+          <div className={classes.nameInput}>
+            <TextField label="שם מדווח" />
+          </div>
 
-        <Tooltip title="דווח פתוח" placement="top">
-          <IconButton type="submit">
-            <OpenIcon fontSize="large" />
-          </IconButton>
-        </Tooltip>
-      </form>
-    </Card>
+          <Tooltip title="דווח פתוח" placement="top">
+            <IconButton type="submit">
+              <OpenIcon fontSize="large" />
+            </IconButton>
+          </Tooltip>
+        </form>
+      </Paper>
+    </Box>
   );
 }
