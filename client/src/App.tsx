@@ -1,25 +1,42 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Button, Container, Grid, makeStyles } from '@material-ui/core';
+import React, { useReducer } from 'react';
+import { StatusBanner } from './components/StatusBanner';
+import { ReportForm } from './components/ReportForm';
+import { ReportsHistory } from './components/ReportsHistory';
+
+const useStyles = makeStyles((_theme) => ({
+  root: {
+    flexGrow: 1,
+    textAlign: 'center',
+    margin: 'auto',
+    marginTop: 36,
+  },
+  statusBanner: {
+    flexDirection: 'column',
+  },
+}));
 
 function App() {
+  const classes = useStyles();
+  const [open, toggleOpen] = useReducer((open) => !open, false);
+  const lastReporter = 'זנגי המלך';
+  const lastReportTime = 'לפני 20 דקות';
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container maxWidth="sm" className={classes.root}>
+      <Button onClick={toggleOpen}>Open? {open}</Button>
+      <Grid container>
+        <Grid item xs={12}>
+          <StatusBanner {...{ open, lastReportTime, lastReporter }} />
+        </Grid>
+        <Grid item xs={12}>
+          <ReportForm />
+        </Grid>
+        <Grid item xs={12}>
+          <ReportsHistory />
+        </Grid>
+      </Grid>
+    </Container>
   );
 }
 
