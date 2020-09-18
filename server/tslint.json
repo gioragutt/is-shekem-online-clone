@@ -17,14 +17,7 @@
       true,
       "array-simple"
     ],
-    "object-literal-sort-keys": false,
-    "trailing-comma": [
-      true,
-      {
-        "multiline": "always",
-        "singleline": "never"
-      }
-    ]
+    "object-literal-sort-keys": false
   },
   "rulesDirectory": []
 }
