@@ -18,7 +18,7 @@ const useStyles = makeStyles({
   },
 });
 
-const CREATE_REPORT = gql`
+export const CREATE_REPORT = gql`
   mutation CreateReport($reporter: String!, $open: Boolean!) {
     createReport(input: { reporter: $reporter, open: $open }) {
       open
@@ -36,6 +36,8 @@ export function ReportForm({ onCreateReport }: ReportFormProps) {
 
   const [createReport] = useMutation(CREATE_REPORT, {
     onCompleted: () => onCreateReport(),
+    // Specified cause otherwise component dies and mutation error test fails
+    onError() {},
   });
 
   const handleCreateReport = useCallback(
@@ -53,7 +55,11 @@ export function ReportForm({ onCreateReport }: ReportFormProps) {
         <form className={classes.form} autoComplete="off">
           <Tooltip title="דווח סגור" placement="top">
             <span>
-              <IconButton onClick={() => handleCreateReport(false)} disabled={!reporter}>
+              <IconButton
+                onClick={() => handleCreateReport(false)}
+                disabled={!reporter}
+                data-testid="close-button"
+              >
                 <ClosedIcon fontSize="large" />
               </IconButton>
             </span>
@@ -63,13 +69,18 @@ export function ReportForm({ onCreateReport }: ReportFormProps) {
             <TextField
               label="שם מדווח"
               value={reporter}
+              inputProps={{ 'data-testid': 'reporter-input' }}
               onChange={(e) => setReporter(e.target.value)}
             />
           </div>
 
           <Tooltip title="דווח פתוח" placement="top">
             <span>
-              <IconButton onClick={() => handleCreateReport(true)} disabled={!reporter}>
+              <IconButton
+                onClick={() => handleCreateReport(true)}
+                disabled={!reporter}
+                data-testid="open-button"
+              >
                 <OpenIcon fontSize="large" />
               </IconButton>
             </span>
