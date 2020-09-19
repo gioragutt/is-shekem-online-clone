@@ -1,7 +1,14 @@
+import cors from 'cors';
 import express from 'express';
 import { graphqlHTTP } from 'express-graphql';
-import { schema } from './graphql-schema';
-import cors from 'cors';
+import { GraphQLSchema } from 'graphql';
+import { mutation } from './mutation';
+import { query } from './query';
+
+const schema = new GraphQLSchema({
+  query,
+  mutation,
+});
 
 export const app = express();
 
