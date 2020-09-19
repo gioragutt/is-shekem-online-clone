@@ -1,6 +1,6 @@
 import { Request } from 'express';
 import { GraphQLFieldConfig, GraphQLNonNull } from 'graphql';
-import { createReport as createReportInDb, ReportInput } from '../database';
+import { createReport as createReportInDb, ReportInput } from '../app';
 import { NonNullReportType, ReportInputType } from '../types';
 
 export const createReport: GraphQLFieldConfig<any, any, {

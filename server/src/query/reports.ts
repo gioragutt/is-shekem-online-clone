@@ -1,6 +1,6 @@
 import { Request } from 'express';
 import { GraphQLFieldConfig, GraphQLInt, GraphQLList } from 'graphql';
-import { getLatestReports } from '../database';
+import { getLatestReports } from '../app';
 import { NonNullReportType } from '../types';
 
 export const reports: GraphQLFieldConfig<any, any, {
