@@ -5,58 +5,31 @@ import {
   ListItemAvatar,
   ListItemIcon,
   ListItemText,
+  makeStyles,
   Paper,
   Typography,
-  makeStyles
 } from '@material-ui/core';
 import HistoryIcon from '@material-ui/icons/History';
-import { formatDistanceToNow } from 'date-fns';
-import { he } from 'date-fns/locale';
-import React from 'react';
+import { Skeleton } from '@material-ui/lab';
+import React, {Fragment} from 'react';
+import { Report } from '../models';
+import { formatTimeAgo } from '../util';
 import { SectionTitle } from './SectionTitle';
 import { StatusIcon } from './StatusIcon';
 import { VoteValue } from './VoteValue';
 
-interface ReportItemData {
-  reporter: string;
-  open: boolean;
-  upvotes: number;
-  downvotes: number;
-  timestamp: Date;
-}
-
-const data: ReportItemData[] = [
-  {
-    reporter: 'קקי',
-    open: true,
-    downvotes: 1,
-    upvotes: 2,
-    timestamp: new Date(),
-  },
-  {
-    reporter: 'גדול',
-    open: false,
-    downvotes: 0,
-    upvotes: 1,
-    timestamp: new Date(Date.now() - 1_000_000),
-  },
-  {
-    reporter: 'מאוד',
-    open: true,
-    downvotes: 3,
-    upvotes: 10,
-    timestamp: new Date(Date.now() - 10_000_000_000),
-  },
-];
-
 const useReportItemStyles = makeStyles({
   timeAgo: {
     minWidth: '120px',
-    textAlign: 'right'
-  }
-})
+    textAlign: 'right',
+  },
+});
 
-function ReportItem({ open, reporter, downvotes, upvotes, timestamp }: ReportItemData) {
+function ReportItem({
+  report: { reporter, open, downvotes, upvotes, timestamp },
+}: {
+  report: Report;
+}) {
   const classes = useReportItemStyles();
   return (
     <ListItem>
@@ -66,31 +39,56 @@ function ReportItem({ open, reporter, downvotes, upvotes, timestamp }: ReportIte
       <ListItemText>{reporter}</ListItemText>
 
       <ListItemIcon>
-        <VoteValue vote={false} value={downvotes} />
+        <VoteValue vote="DOWNVOTE" value={downvotes} />
       </ListItemIcon>
       <ListItemIcon>
-        <VoteValue vote={true} value={upvotes} />
+        <VoteValue vote="UPVOTE" value={upvotes} />
       </ListItemIcon>
-      <Typography className={classes.timeAgo}>
-        {formatDistanceToNow(timestamp, { locale: he, addSuffix: true })}
-      </Typography>
+      <Typography className={classes.timeAgo}>{formatTimeAgo(timestamp)}</Typography>
     </ListItem>
   );
 }
+export interface ReportsHistoryProps {
+  loading: boolean;
+  reports: Report[];
+}
 
-export function ReportsHistory() {
+export function ReportsHistory({ loading, reports }: ReportsHistoryProps) {
+  if (!loading && reports.length === 0) {
+    return <SectionTitle title="אין דיווחים אחרונים" icon={<HistoryIcon />} />;
+  }
   return (
     <>
       <SectionTitle title="דיווחים אחרונים" icon={<HistoryIcon />} />
       <Paper variant="outlined">
-        <List>
-          {data.map((item, index) => (
-            <>
-              {index === 0 ? null : <Divider />}
-              <ReportItem key={`${item.reporter}-${item.timestamp.getTime()}`} {...item} />
-            </>
-          ))}
-        </List>
+        {loading ? (
+          <List>
+            <ListItem>
+              <Skeleton variant="rect" />
+            </ListItem>
+            <ListItem>
+              <Skeleton variant="rect" />
+            </ListItem>
+            <ListItem>
+              <Skeleton variant="rect" />
+            </ListItem>
+            <ListItem>
+              <Skeleton variant="rect" />
+            </ListItem>
+            <ListItem>
+              <Skeleton variant="rect" />
+            </ListItem>
+          </List>
+        ) : (
+          <List>
+            {reports.map((report, index) => (
+              <Fragment key={`${report.reporter}-${report.timestamp}`}>
+                {index === 0 ? null : <Divider />}
+                <ReportItem report={report} />
+              </Fragment>
+            ))}
+          </List>
+        )}
       </Paper>
     </>
   );

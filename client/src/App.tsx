@@ -1,8 +1,22 @@
-import { Button, Container, Grid, makeStyles } from '@material-ui/core';
-import React, { useReducer } from 'react';
-import { StatusBanner } from './components/StatusBanner';
+import { gql, useQuery } from '@apollo/client';
+import { Container, Grid, makeStyles, Typography } from '@material-ui/core';
+import React from 'react';
 import { ReportForm } from './components/ReportForm';
 import { ReportsHistory } from './components/ReportsHistory';
+import { StatusBanner } from './components/StatusBanner';
+
+const REPORTS = gql`
+  query Reports {
+    reports {
+      reporter
+      timestamp
+      open
+      upvotes
+      downvotes
+      myVote
+    }
+  }
+`;
 
 const useStyles = makeStyles((_theme) => ({
   root: {
@@ -18,22 +32,27 @@ const useStyles = makeStyles((_theme) => ({
 
 function App() {
   const classes = useStyles();
-  const [open, toggleOpen] = useReducer((open) => !open, false);
-  const lastReporter = 'זנגי המלך';
-  const lastReportTime = 'לפני 20 דקות';
+  const { loading, error, data, refetch } = useQuery(REPORTS);
+
+  if (error) {
+    return (
+      <Typography color="error" align="center">
+        Fuck something's wrong...
+      </Typography>
+    );
+  }
 
   return (
     <Container maxWidth="sm" className={classes.root}>
-      <Button onClick={toggleOpen}>Open? {open}</Button>
       <Grid container>
         <Grid item xs={12}>
-          <StatusBanner {...{ open, lastReportTime, lastReporter }} />
+          <StatusBanner {...{ loading, report: data?.reports[0], onVote: refetch }} />
         </Grid>
         <Grid item xs={12}>
-          <ReportForm />
+          <ReportForm onCreateReport={() => refetch()} />
         </Grid>
         <Grid item xs={12}>
-          <ReportsHistory />
+          <ReportsHistory {...{ loading, reports: data?.reports }} />
         </Grid>
       </Grid>
     </Container>

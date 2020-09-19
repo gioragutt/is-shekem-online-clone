@@ -2,6 +2,7 @@ import { makeStyles, Typography } from '@material-ui/core';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import React from 'react';
+import { Vote } from '../models';
 
 const useStyles = makeStyles({
   value: {
@@ -10,13 +11,13 @@ const useStyles = makeStyles({
 });
 
 export interface VoteValueProps {
-  vote: boolean;
+  vote: Vote;
   value: number;
 }
 
 export function VoteValue({ vote, value }: VoteValueProps) {
   const classes = useStyles();
-  if (vote) {
+  if (vote === 'UPVOTE') {
     return (
       <>
         <Typography color="primary" className={classes.value}>

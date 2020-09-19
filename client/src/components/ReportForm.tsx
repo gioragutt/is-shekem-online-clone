@@ -1,9 +1,9 @@
-import { IconButton, makeStyles, TextField, Paper, Box } from '@material-ui/core';
-import React from 'react';
-import { ClosedIcon, OpenIcon } from './StatusIcon';
-import { Tooltip } from '@material-ui/core';
+import { gql, useMutation } from '@apollo/client';
+import { Box, IconButton, makeStyles, Paper, TextField, Tooltip } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+import React, { useCallback, useState } from 'react';
 import { SectionTitle } from './SectionTitle';
+import { ClosedIcon, OpenIcon } from './StatusIcon';
 
 const useStyles = makeStyles({
   form: {
@@ -14,12 +14,37 @@ const useStyles = makeStyles({
     padding: '0 30px',
     '& > *': {
       width: '100%',
-    }
+    },
   },
 });
 
-export function ReportForm() {
+const CREATE_REPORT = gql`
+  mutation CreateReport($reporter: String!, $open: Boolean!) {
+    createReport(input: { reporter: $reporter, open: $open }) {
+      open
+    }
+  }
+`;
+
+export interface ReportFormProps {
+  onCreateReport(): void;
+}
+
+export function ReportForm({ onCreateReport }: ReportFormProps) {
   const classes = useStyles();
+  const [reporter, setReporter] = useState('');
+
+  const [createReport] = useMutation(CREATE_REPORT, {
+    onCompleted: () => onCreateReport(),
+  });
+
+  const handleCreateReport = useCallback(
+    (open: boolean) => {
+      createReport({ variables: { reporter, open } });
+      setReporter('');
+    },
+    [createReport, reporter]
+  );
 
   return (
     <Box>
@@ -27,19 +52,27 @@ export function ReportForm() {
       <Paper variant="outlined">
         <form className={classes.form} autoComplete="off">
           <Tooltip title="דווח סגור" placement="top">
-            <IconButton type="submit">
-              <ClosedIcon fontSize="large" />
-            </IconButton>
+            <span>
+              <IconButton onClick={() => handleCreateReport(false)} disabled={!reporter}>
+                <ClosedIcon fontSize="large" />
+              </IconButton>
+            </span>
           </Tooltip>
 
           <div className={classes.nameInput}>
-            <TextField label="שם מדווח" />
+            <TextField
+              label="שם מדווח"
+              value={reporter}
+              onChange={(e) => setReporter(e.target.value)}
+            />
           </div>
 
           <Tooltip title="דווח פתוח" placement="top">
-            <IconButton type="submit">
-              <OpenIcon fontSize="large" />
-            </IconButton>
+            <span>
+              <IconButton onClick={() => handleCreateReport(true)} disabled={!reporter}>
+                <OpenIcon fontSize="large" />
+              </IconButton>
+            </span>
           </Tooltip>
         </form>
       </Paper>
