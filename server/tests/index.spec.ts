@@ -1,8 +1,7 @@
 import supertest from 'supertest';
-import { app } from '../src/app';
-import { Report } from '../src/database';
+import { Report } from '../src/app';
 
-const request = supertest(app);
+const request = supertest('http://localhost:4000');
 
 async function makeRequest(query: string, variables?: object): Promise<any> {
   const res = await request.post('/graphql')
@@ -12,12 +11,6 @@ async function makeRequest(query: string, variables?: object): Promise<any> {
 }
 
 describe('Is Shekem Online', () => {
-  it('should return empty array for `reports` before creating any', async () => {
-    const { reports } = await makeRequest(`{ reports { reporter } }`);
-
-    expect(reports.length).toBe(0);
-  });
-
   it('should return a new report when calling `createReport`', async () => {
     const { createReport } = await makeRequest(`
       mutation {

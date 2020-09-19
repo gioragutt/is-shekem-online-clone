@@ -76,6 +76,6 @@ export async function voteOnReport(
     case 'DOWNVOTE': report.downvotes.push(reportingIp); break;
   }
 
-  await ReportModel.update({ _id: report.id }, report);
+  await ReportModel.updateOne({ _id: report.id }, report);
   return entryToReport(reportingIp)(report);
 }
