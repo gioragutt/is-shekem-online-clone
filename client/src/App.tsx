@@ -1,5 +1,5 @@
 import { gql, useQuery } from '@apollo/client';
-import { Container, Grid, makeStyles, Typography, Paper, Box } from '@material-ui/core';
+import { Box, Container, Grid, makeStyles, Paper, Typography } from '@material-ui/core';
 import React from 'react';
 import { ReportForm } from './components/ReportForm';
 import { ReportsHistory } from './components/ReportsHistory';
@@ -44,7 +44,11 @@ function App() {
     return (
       <Container maxWidth="md" className={classes.root} dir="ltr">
         <Typography color="error" align="center">
-          Well that's emberassing... 😳
+          Well that's emberassing...
+          {' '}
+          <span role="img" aria-label="Embarrassed emoji">
+            😳
+          </span>
           <Paper className={classes.errorBox}>
             <Box
               display="flex"

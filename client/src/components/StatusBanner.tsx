@@ -1,7 +1,7 @@
 import { gql, useMutation } from '@apollo/client';
-import { Container, makeStyles, Typography, Box } from '@material-ui/core';
+import { Box, Container, makeStyles, Typography } from '@material-ui/core';
 import { Skeleton, ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
-import React, { useCallback, useReducer } from 'react';
+import React, { useCallback } from 'react';
 import { Report, Vote } from '../models';
 import { formatTimeAgo } from '../util';
 import { StatusIcon } from './StatusIcon';
