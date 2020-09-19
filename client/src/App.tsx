@@ -1,6 +1,7 @@
 import { gql, useQuery } from '@apollo/client';
-import { Box, Container, Grid, makeStyles, Paper, Typography } from '@material-ui/core';
+import { Container, Grid, makeStyles } from '@material-ui/core';
 import React from 'react';
+import { ErrorPage } from './components/ErrorPage';
 import { ReportForm } from './components/ReportForm';
 import { ReportsHistory } from './components/ReportsHistory';
 import { StatusBanner } from './components/StatusBanner';
@@ -28,10 +29,6 @@ const useStyles = makeStyles((theme) => ({
   statusBanner: {
     flexDirection: 'column',
   },
-  errorBox: {
-    backgroundColor: theme.palette.error.light,
-    marginTop: 16,
-  },
 }));
 
 function App() {
@@ -41,35 +38,7 @@ function App() {
   });
 
   if (error) {
-    return (
-      <Container maxWidth="md" className={classes.root} dir="ltr">
-        <Typography color="error" align="center">
-          Well that's emberassing...
-          {' '}
-          <span role="img" aria-label="Embarrassed emoji">
-            😳
-          </span>
-          <Paper className={classes.errorBox}>
-            <Box
-              display="flex"
-              flexDirection="column"
-              alignItems="center"
-              justifyContent="center"
-              height={400}
-              p={4}
-            >
-              {error.message}
-              <br />
-              <b>
-                <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word', textAlign: 'left' }}>
-                  {JSON.stringify(error.networkError, null, 2)}
-                </pre>
-              </b>
-            </Box>
-          </Paper>
-        </Typography>
-      </Container>
-    );
+    return <ErrorPage error={error} />;
   }
 
   return (
