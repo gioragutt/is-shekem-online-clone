@@ -1,5 +1,5 @@
 import { gql, useQuery } from '@apollo/client';
-import { Container, Grid, makeStyles, Typography } from '@material-ui/core';
+import { Container, Grid, makeStyles, Typography, Paper, Box } from '@material-ui/core';
 import React from 'react';
 import { ReportForm } from './components/ReportForm';
 import { ReportsHistory } from './components/ReportsHistory';
@@ -18,7 +18,7 @@ const REPORTS = gql`
   }
 `;
 
-const useStyles = makeStyles((_theme) => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     textAlign: 'center',
@@ -28,17 +28,43 @@ const useStyles = makeStyles((_theme) => ({
   statusBanner: {
     flexDirection: 'column',
   },
+  errorBox: {
+    backgroundColor: theme.palette.error.light,
+    marginTop: 16,
+  },
 }));
 
 function App() {
   const classes = useStyles();
-  const { loading, error, data, refetch } = useQuery(REPORTS);
+  const { loading, error, data, refetch } = useQuery(REPORTS, {
+    pollInterval: 6_000,
+  });
 
   if (error) {
     return (
-      <Typography color="error" align="center">
-        Fuck something's wrong...
-      </Typography>
+      <Container maxWidth="md" className={classes.root} dir="ltr">
+        <Typography color="error" align="center">
+          Well that's emberassing... 😳
+          <Paper className={classes.errorBox}>
+            <Box
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+              justifyContent="center"
+              height={400}
+              p={4}
+            >
+              {error.message}
+              <br />
+              <b>
+                <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word', textAlign: 'left' }}>
+                  {JSON.stringify(error.networkError, null, 2)}
+                </pre>
+              </b>
+            </Box>
+          </Paper>
+        </Typography>
+      </Container>
     );
   }
 

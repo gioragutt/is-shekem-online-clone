@@ -1,5 +1,5 @@
 import { gql, useMutation } from '@apollo/client';
-import { Container, makeStyles, Typography } from '@material-ui/core';
+import { Container, makeStyles, Typography, Box } from '@material-ui/core';
 import { Skeleton, ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 import React, { useCallback, useReducer } from 'react';
 import { Report, Vote } from '../models';
@@ -52,7 +52,7 @@ export function StatusBanner({ loading, report, onVote }: StatusBannerProps) {
 
   if (!loading && !report) {
     return (
-      <Container className={`${classes.statusBanner}`}>
+      <Container className={classes.statusBanner}>
         <Typography variant="h4">תגיד/י השק״ם פתוח?</Typography>
         <StatusIcon open={false} className={classes.statusIcon} />
 
@@ -62,51 +62,50 @@ export function StatusBanner({ loading, report, onVote }: StatusBannerProps) {
   }
 
   return (
-    <Container className={`${classes.statusBanner}`}>
+    <Container className={classes.statusBanner}>
       <Typography variant="h4">תגיד/י השק״ם פתוח?</Typography>
       {loading ? (
-        <Skeleton variant="circle" width={iconSize} height={iconSize} />
+        <>
+          <Box display="flex" flexDirection="column" alignItems="center">
+            <Skeleton variant="circle" width={iconSize} height={iconSize} />
+            <Skeleton variant="text" width={150} />
+            <Skeleton variant="text" width={150} />
+          </Box>
+          <div>
+            <ToggleButtonGroup value={null}>
+              <ToggleButton value="DOWNVOTE">
+                <VoteValue vote="DOWNVOTE" value={0} />
+              </ToggleButton>
+              <ToggleButton value="UPVOTE">
+                <VoteValue vote="UPVOTE" value={0} />
+              </ToggleButton>
+            </ToggleButtonGroup>
+          </div>
+        </>
       ) : (
-        <StatusIcon open={report.open} className={classes.statusIcon} />
-      )}
+        <>
+          <StatusIcon open={report.open} className={classes.statusIcon} />
 
-      {loading ? (
-        <Skeleton variant="text" />
-      ) : (
-        <div>
-          דווח ע״י <b>{report.reporter}</b>
-        </div>
-      )}
+          <div>
+            דווח ע״י <b>{report.reporter}</b>
+          </div>
 
-      {loading ? (
-        <Skeleton variant="text" />
-      ) : (
-        <Typography color={report.open ? 'primary' : 'error'} variant="body2">
-          <b>{formatTimeAgo(report.timestamp)}</b>
-        </Typography>
-      )}
+          <Typography color={report.open ? 'primary' : 'error'} variant="body2">
+            <b>{formatTimeAgo(report.timestamp)}</b>
+          </Typography>
 
-      <div>
-        {loading ? (
-          <ToggleButtonGroup value={null}>
-            <ToggleButton value="DOWNVOTE">
-              <VoteValue vote="DOWNVOTE" value={0} />
-            </ToggleButton>
-            <ToggleButton value="UPVOTE">
-              <VoteValue vote="UPVOTE" value={0} />
-            </ToggleButton>
-          </ToggleButtonGroup>
-        ) : (
-          <ToggleButtonGroup value={report.myVote} exclusive onChange={handleChangeVote}>
-            <ToggleButton value="DOWNVOTE">
-              <VoteValue vote="DOWNVOTE" value={report.downvotes} />
-            </ToggleButton>
-            <ToggleButton value="UPVOTE">
-              <VoteValue vote="UPVOTE" value={report.upvotes} />
-            </ToggleButton>
-          </ToggleButtonGroup>
-        )}
-      </div>
+          <div>
+            <ToggleButtonGroup value={report.myVote} exclusive onChange={handleChangeVote}>
+              <ToggleButton value="DOWNVOTE">
+                <VoteValue vote="DOWNVOTE" value={report.downvotes} />
+              </ToggleButton>
+              <ToggleButton value="UPVOTE">
+                <VoteValue vote="UPVOTE" value={report.upvotes} />
+              </ToggleButton>
+            </ToggleButtonGroup>
+          </div>
+        </>
+      )}
     </Container>
   );
 }

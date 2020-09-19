@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core';
 import HistoryIcon from '@material-ui/icons/History';
 import { Skeleton } from '@material-ui/lab';
-import React, {Fragment} from 'react';
+import React, { Fragment } from 'react';
 import { Report } from '../models';
 import { formatTimeAgo } from '../util';
 import { SectionTitle } from './SectionTitle';
@@ -53,6 +53,15 @@ export interface ReportsHistoryProps {
   reports: Report[];
 }
 
+const historyEntrySkeleton = (
+  <ListItem>
+    <Skeleton variant="circle" height={30} width={30} style={{ marginLeft: 8 }} />
+    <Skeleton variant="rect" width="100%" />
+    <Skeleton variant="circle" height={30} width={30} style={{ marginRight: 8 }} />
+    <Skeleton variant="circle" height={30} width={30} style={{ marginRight: 8 }} />
+  </ListItem>
+);
+
 export function ReportsHistory({ loading, reports }: ReportsHistoryProps) {
   if (!loading && reports.length === 0) {
     return <SectionTitle title="אין דיווחים אחרונים" icon={<HistoryIcon />} />;
@@ -63,21 +72,11 @@ export function ReportsHistory({ loading, reports }: ReportsHistoryProps) {
       <Paper variant="outlined">
         {loading ? (
           <List>
-            <ListItem>
-              <Skeleton variant="rect" />
-            </ListItem>
-            <ListItem>
-              <Skeleton variant="rect" />
-            </ListItem>
-            <ListItem>
-              <Skeleton variant="rect" />
-            </ListItem>
-            <ListItem>
-              <Skeleton variant="rect" />
-            </ListItem>
-            <ListItem>
-              <Skeleton variant="rect" />
-            </ListItem>
+            {historyEntrySkeleton}
+            {historyEntrySkeleton}
+            {historyEntrySkeleton}
+            {historyEntrySkeleton}
+            {historyEntrySkeleton}
           </List>
         ) : (
           <List>
