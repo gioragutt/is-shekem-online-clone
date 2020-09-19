@@ -7,6 +7,9 @@ import React from 'react';
 import { CREATE_REPORT, ReportForm } from './ReportForm';
 
 function letTheChangeSinkIn() {
+  // https://github.com/apollographql/react-apollo/issues/1711#issuecomment-369511476
+  // `render` instead of `mount`, and used in `act` instead of highest test scope.
+  // 🤮
   return new Promise((resolve) => setTimeout(resolve, 0));
 }
 
