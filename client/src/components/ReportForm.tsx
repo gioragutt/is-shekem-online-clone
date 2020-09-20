@@ -56,6 +56,7 @@ export function ReportForm({ onCreateReport }: ReportFormProps) {
           <Tooltip title="דווח סגור" placement="top">
             <span>
               <IconButton
+                type="button"
                 onClick={() => handleCreateReport(false)}
                 disabled={!reporter}
                 data-testid="close-button"
@@ -77,6 +78,7 @@ export function ReportForm({ onCreateReport }: ReportFormProps) {
           <Tooltip title="דווח פתוח" placement="top">
             <span>
               <IconButton
+                type="button"
                 onClick={() => handleCreateReport(true)}
                 disabled={!reporter}
                 data-testid="open-button"
