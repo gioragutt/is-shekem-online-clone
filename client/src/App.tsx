@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
 function App() {
   const classes = useStyles();
   const { loading, error, data, refetch } = useQuery(REPORTS, {
-    pollInterval: 6_000,
+    pollInterval: 60_000,
   });
 
   if (error) {
