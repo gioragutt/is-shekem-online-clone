@@ -59,6 +59,20 @@ export async function createReport(
   return entryToReport(reportingIp)(createdDocument);
 }
 
+export function updateVotes(
+  report: { upvotes: string[], downvotes: string[] },
+  reportingIp: string,
+  vote: Vote,
+): void {
+  report.downvotes = report.downvotes.filter(ip => ip !== reportingIp);
+  report.upvotes = report.upvotes.filter(ip => ip !== reportingIp);
+
+  switch (vote) {
+    case 'UPVOTE': report.upvotes.push(reportingIp); break;
+    case 'DOWNVOTE': report.downvotes.push(reportingIp); break;
+  }
+}
+
 export async function voteOnReport(
   reportingIp: string,
   vote: Vote,
@@ -68,13 +82,7 @@ export async function voteOnReport(
     throw new NotFound('No report exists yet')
   }
 
-  report.downvotes.splice(report.downvotes.indexOf(reportingIp))
-  report.upvotes.splice(report.upvotes.indexOf(reportingIp));
-
-  switch (vote) {
-    case 'UPVOTE': report.upvotes.push(reportingIp); break;
-    case 'DOWNVOTE': report.downvotes.push(reportingIp); break;
-  }
+  updateVotes(report, reportingIp, vote);
 
   await ReportModel.updateOne({ _id: report.id }, report);
   return entryToReport(reportingIp)(report);
