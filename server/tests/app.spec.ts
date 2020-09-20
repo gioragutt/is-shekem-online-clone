@@ -24,7 +24,7 @@ describe('updateVotes', () => {
       downvotes: [REPORTING_IP],
     };
 
-    updateVotes(report, 'ip', 'DOWNVOTE');
+    updateVotes(report, REPORTING_IP, 'DOWNVOTE');
 
     expect(report.upvotes).toEqual([OTHER_IP]);
     expect(report.downvotes).toEqual([REPORTING_IP]);
@@ -32,11 +32,11 @@ describe('updateVotes', () => {
 
   it('should move votes correctly', () => {
     const report: ReportToUpdate = {
-      upvotes: ['existing-ip'],
-      downvotes: ['ip'],
+      upvotes: [OTHER_IP],
+      downvotes: [REPORTING_IP],
     };
 
-    updateVotes(report, 'ip', 'UPVOTE');
+    updateVotes(report, REPORTING_IP, 'UPVOTE');
 
     expect(report.upvotes).toEqual([OTHER_IP, REPORTING_IP]);
     expect(report.downvotes).toEqual([]);
