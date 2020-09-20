@@ -5,8 +5,9 @@ import { ErrorPage } from './components/ErrorPage';
 import { ReportForm } from './components/ReportForm';
 import { ReportsHistory } from './components/ReportsHistory';
 import { StatusBanner } from './components/StatusBanner';
+import { Report } from './models';
 
-const REPORTS = gql`
+export const REPORTS = gql`
   query Reports {
     reports {
       reporter
@@ -19,7 +20,7 @@ const REPORTS = gql`
   }
 `;
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
   root: {
     flexGrow: 1,
     textAlign: 'center',
@@ -29,11 +30,11 @@ const useStyles = makeStyles((theme) => ({
   statusBanner: {
     flexDirection: 'column',
   },
-}));
+});
 
 function App() {
   const classes = useStyles();
-  const { loading, error, data, refetch } = useQuery(REPORTS, {
+  const { loading, error, data, refetch } = useQuery<{ reports: Report[] }>(REPORTS, {
     pollInterval: 60_000,
   });
 
@@ -48,10 +49,10 @@ function App() {
           <StatusBanner {...{ loading, report: data?.reports[0], onVote: refetch }} />
         </Grid>
         <Grid item xs={12}>
-          <ReportForm onCreateReport={() => refetch()} />
+          <ReportForm onCreateReport={refetch} />
         </Grid>
         <Grid item xs={12}>
-          <ReportsHistory {...{ loading, reports: data?.reports }} />
+          <ReportsHistory {...{ loading, reports: data?.reports! }} />
         </Grid>
       </Grid>
     </Container>

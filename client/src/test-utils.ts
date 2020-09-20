@@ -16,3 +16,7 @@ export function expectMutation(request: GraphQLRequest): MockedResponse & { muta
     mutate,
   };
 }
+
+export function expectPressed(element: HTMLElement | null, pressed: boolean) {
+  expect(element).toHaveAttribute('aria-pressed', `${pressed}`);
+}

@@ -25,14 +25,10 @@ const useReportItemStyles = makeStyles({
   },
 });
 
-function ReportItem({
-  report: { reporter, open, downvotes, upvotes, timestamp },
-}: {
-  report: Report;
-}) {
+function ReportItem({ reporter, open, downvotes, upvotes, timestamp }: Report) {
   const classes = useReportItemStyles();
   return (
-    <ListItem>
+    <ListItem data-testid="reports-history-list-item">
       <ListItemAvatar>
         <StatusIcon open={open} />
       </ListItemAvatar>
@@ -48,6 +44,7 @@ function ReportItem({
     </ListItem>
   );
 }
+
 export interface ReportsHistoryProps {
   loading: boolean;
   reports: Report[];
@@ -83,7 +80,7 @@ export function ReportsHistory({ loading, reports }: ReportsHistoryProps) {
             {reports.map((report, index) => (
               <Fragment key={`${report.reporter}-${report.timestamp}`}>
                 {index === 0 ? null : <Divider />}
-                <ReportItem report={report} />
+                <ReportItem {...report} />
               </Fragment>
             ))}
           </List>

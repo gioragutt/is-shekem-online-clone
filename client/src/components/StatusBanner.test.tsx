@@ -3,7 +3,7 @@ import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { Report, Vote } from '../models';
-import { expectMutation, letTheChangeSinkIn } from '../test-utils';
+import { expectMutation, letTheChangeSinkIn, expectPressed } from '../test-utils';
 import { StatusBanner, VOTE_ON_REPORT } from './StatusBanner';
 import { GraphQLError } from 'graphql';
 
@@ -15,10 +15,6 @@ const MOCK_REPORT: Report = {
   downvotes: 1,
   myVote: null,
 };
-
-function expectPressed(element: HTMLElement | null, pressed: boolean) {
-  expect(element).toHaveAttribute('aria-pressed', `${pressed}`);
-}
 
 describe('ReportForm', () => {
   let downvoteButton: HTMLElement | null;
@@ -68,9 +64,10 @@ describe('ReportForm', () => {
   });
 
   test('should have the name of the reporter', async () => {
-    const { getByText } = renderUi();
-    const reporterName = getByText(MOCK_REPORT.reporter);
+    const { getByTestId } = renderUi();
+    const reporterName = getByTestId('status-banner-reporter');
     expect(reporterName).toBeInTheDocument();
+    expect(reporterName.textContent).toContain(MOCK_REPORT.reporter);
   });
 
   test('should not have selected button when myVote=null', () => {

@@ -92,9 +92,8 @@ export function StatusBanner({ loading, report, onVote }: StatusBannerProps) {
         <>
           <StatusIcon open={report.open} className={classes.statusIcon} />
 
-          <div>
-            דווח ע״י <b>{report.reporter}</b>
-          </div>
+        <div data-testid="status-banner-reporter">
+          דווח ע״י <b>{report.reporter}</b>
 
           <Typography color={report.open ? 'primary' : 'error'} variant="body2">
             <b>{formatTimeAgo(report.timestamp)}</b>
