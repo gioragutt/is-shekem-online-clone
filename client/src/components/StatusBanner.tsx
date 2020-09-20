@@ -9,6 +9,26 @@ import { VoteValue } from './VoteValue';
 
 const iconSize = 160;
 
+const statusBannerSkeleton = (
+  <>
+    <Box display="flex" flexDirection="column" alignItems="center">
+      <Skeleton variant="circle" width={iconSize} height={iconSize} />
+      <Skeleton variant="text" width={150} />
+      <Skeleton variant="text" width={150} />
+    </Box>
+    <div>
+      <ToggleButtonGroup value={null}>
+        <ToggleButton value="DOWNVOTE">
+          <VoteValue vote="DOWNVOTE" value={0} />
+        </ToggleButton>
+        <ToggleButton value="UPVOTE">
+          <VoteValue vote="UPVOTE" value={0} />
+        </ToggleButton>
+      </ToggleButtonGroup>
+    </div>
+  </>
+);
+
 const useStyles = makeStyles((_theme) => ({
   statusBanner: {
     '& > *': {
@@ -23,7 +43,7 @@ const useStyles = makeStyles((_theme) => ({
   },
 }));
 
-const VOTE_ON_REPORT = gql`
+export const VOTE_ON_REPORT = gql`
   mutation VoteOnReport($vote: Vote) {
     voteOnReport(vote: $vote) {
       open
@@ -41,6 +61,8 @@ export function StatusBanner({ loading, report, onVote }: StatusBannerProps) {
   const classes = useStyles();
   const [voteOnReport] = useMutation(VOTE_ON_REPORT, {
     onCompleted: () => onVote(),
+    // Specified cause otherwise component dies and mutation error test fails
+    onError() {},
   });
 
   const handleChangeVote = useCallback(
@@ -65,23 +87,7 @@ export function StatusBanner({ loading, report, onVote }: StatusBannerProps) {
     <Container className={classes.statusBanner}>
       <Typography variant="h4">תגיד/י השק״ם פתוח?</Typography>
       {loading ? (
-        <>
-          <Box display="flex" flexDirection="column" alignItems="center">
-            <Skeleton variant="circle" width={iconSize} height={iconSize} />
-            <Skeleton variant="text" width={150} />
-            <Skeleton variant="text" width={150} />
-          </Box>
-          <div>
-            <ToggleButtonGroup value={null}>
-              <ToggleButton value="DOWNVOTE">
-                <VoteValue vote="DOWNVOTE" value={0} />
-              </ToggleButton>
-              <ToggleButton value="UPVOTE">
-                <VoteValue vote="UPVOTE" value={0} />
-              </ToggleButton>
-            </ToggleButtonGroup>
-          </div>
-        </>
+        statusBannerSkeleton
       ) : (
         <>
           <StatusIcon open={report.open} className={classes.statusIcon} />
@@ -96,10 +102,10 @@ export function StatusBanner({ loading, report, onVote }: StatusBannerProps) {
 
           <div>
             <ToggleButtonGroup value={report.myVote} exclusive onChange={handleChangeVote}>
-              <ToggleButton value="DOWNVOTE">
+              <ToggleButton value="DOWNVOTE" data-testid="downvote-button">
                 <VoteValue vote="DOWNVOTE" value={report.downvotes} />
               </ToggleButton>
-              <ToggleButton value="UPVOTE">
+              <ToggleButton value="UPVOTE" data-testid="upvote-button">
                 <VoteValue vote="UPVOTE" value={report.upvotes} />
               </ToggleButton>
             </ToggleButtonGroup>

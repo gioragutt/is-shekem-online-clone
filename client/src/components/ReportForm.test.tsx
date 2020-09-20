@@ -1,29 +1,12 @@
-import { GraphQLRequest } from '@apollo/client';
 import { MockedProvider, MockedResponse } from '@apollo/client/testing';
 import { fireEvent } from '@testing-library/dom';
-import { act, render, RenderResult } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import { GraphQLError } from 'graphql';
 import React from 'react';
+import { expectMutation, letTheChangeSinkIn } from '../test-utils';
 import { CREATE_REPORT, ReportForm } from './ReportForm';
 
-function letTheChangeSinkIn() {
-  // https://github.com/apollographql/react-apollo/issues/1711#issuecomment-369511476
-  // `render` instead of `mount`, and used in `act` instead of highest test scope.
-  // 🤮
-  return new Promise((resolve) => setTimeout(resolve, 0));
-}
-
-function expectMutation(request: GraphQLRequest): MockedResponse & { mutate: jest.Mock } {
-  const mutate = jest.fn(() => ({ data: {}}));
-  return {
-    request,
-    result: mutate,
-    mutate,
-  };
-}
-
 describe('ReportForm', () => {
-  let renderResult: RenderResult;
   let closeButton: HTMLElement;
   let openButton: HTMLElement;
   let reporterInput: HTMLElement;
@@ -35,7 +18,7 @@ describe('ReportForm', () => {
     onCreateReport?: () => void;
     mock?: MockedResponse;
   } = {}) {
-    renderResult = render(
+    const renderResult = render(
       <MockedProvider mocks={mock ? [mock] : []} addTypename={false}>
         <ReportForm onCreateReport={onCreateReport} />
       </MockedProvider>
